@@ -150,22 +150,41 @@ Future<dynamic> getContests () async {
   return response;
 }
 
-Stream<Response> getContestsStream () async* {
-  final token = await getToken();
-  yield* Stream.periodic(Duration(seconds: 1), (_) {
-    return get(Uri.parse('${urlStart}contests'), headers: {
-      'Content-Type': 'text/html',
-      'charset': 'UTF-8',
-      'Authorization': "Token $token"
-    });
-  }).asyncMap((event) async => await event);
-}
-
-
 
 Future<dynamic> getContest (String id) async {
   final token = await getToken();
-  final response = await get(Uri.parse('${urlStart}place/$id/'),headers: {'Authorization':'Token $token'});
+  final response = await get(Uri.parse('${urlStart}contests/$id/'),headers: {'Authorization':'Token $token'});
+  return response;
+}
+
+
+Future<dynamic> getCasts () async {
+  final token = await getToken();
+  final response = await get(Uri.parse('${urlStart}casts/'),headers: {'Authorization':'Token $token'});
+  return response;
+}
+
+
+Future<dynamic> getCast (String id) async {
+  final token = await getToken();
+  final response = await get(Uri.parse('${urlStart}casts/$id/'),headers: {'Authorization':'Token $token'});
+  return response;
+}
+
+Future<Response> sendCast(String contestId,String cast) async {
+  final body = {
+    'prognoz':cast
+  };
+  final token = await getToken();
+  final jsonString = json.encode(body);
+  final response = await post(
+      Uri.parse('${urlStart}contests/$contestId/'),
+      body: jsonString,
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        'Authorization':"Token $token"
+      });
   return response;
 }
 // Stream<Response> get_restaurants_as_stream() async* {

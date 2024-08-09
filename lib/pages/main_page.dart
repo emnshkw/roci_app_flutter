@@ -4,6 +4,7 @@ import 'package:roci_app/api.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
 import 'package:roci_app/bottom_menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:roci_app/pages/cast_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -175,15 +176,24 @@ class _MainChooseState extends State<MainPage> {
     return GestureDetector(
       onTap: () {
         if (data['available']) {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => CastPage(data['id']),
+              transitionDuration: Duration(milliseconds: 300),
+              transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+            ),
+          );
         } else {
           Fluttertoast.showToast(
-              msg: 'Данные конкурс доступен только нашим рефералам',
+              msg: 'Данный конкурс доступен только нашим рефералам',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 15,
               backgroundColor: Colors.red,
               textColor: Colors.white,
               fontSize: 16.0);
+          Navigator.of(context).pop();
         }
       },
       child: Container(
@@ -271,7 +281,6 @@ class _MainChooseState extends State<MainPage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             Map<String, dynamic> data = convert_snapshot_to_map(snapshot);
-            print(data);
             List<Widget> contestBtns = [];
             for (Map<String, dynamic> contest in data['data']) {
               if (contest['isActive'] == false) {
@@ -299,7 +308,7 @@ class _MainChooseState extends State<MainPage> {
               );
             }
           } else {
-            print(snapshot);
+
           }
           return LinearProgressIndicator();
         });
@@ -308,22 +317,35 @@ class _MainChooseState extends State<MainPage> {
 
   String choosedType = 'Футбол';
 
+  Future<void> _refresh() async {
+    // Perform some asynchronous operation to update the items list
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {});
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            header(),
-            Padding(
-                padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
-            sportTypeSwitcher(),
-            contests()
-          ],
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        color: Color(0xffBAEE68),
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              header(),
+              Padding(
+                  padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
+              sportTypeSwitcher(),
+              contests(),
+            ],
+          ),
         ),
       ),
       backgroundColor: const Color(0xffECECEC),
-      bottomNavigationBar: BottomMenuBar(currentIndex: 0, context: context),
+      bottomNavigationBar: BottomMenuBar(currentIndex: 0, context: context,page: "Все события",),
     );
   }
 }

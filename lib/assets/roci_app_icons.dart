@@ -9,7 +9,7 @@
 ///   fonts:
 ///    - family:  MyFlutterApp
 ///      fonts:
-///       - asset: fonts/MyFlutterApp.ttf
+///       - asset: fonts/RociAppIcons.ttf
 ///
 /// 
 ///
@@ -34,4 +34,5 @@ class RociAppIcons {
   static const IconData hockey_icon = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData open_icon = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData close_icon = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData x = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

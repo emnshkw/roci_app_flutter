@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
+import 'package:roci_app/pages/history_page.dart';
+import 'package:roci_app/pages/main_page.dart';
 
 class BottomMenuBar extends StatelessWidget {
   final int currentIndex;
   final BuildContext context;
-
-  const BottomMenuBar({super.key, required this.currentIndex,required this.context});
+  final String page;
+  const BottomMenuBar({super.key, required this.currentIndex,required this.context,required this.page});
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +47,29 @@ class BottomMenuBar extends StatelessWidget {
         unselectedItemColor: const Color(0xff000000),
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
-          if (index == 3 && currentIndex != 3) {
-            // Navigator.push(
-            //   context,
-            //   PageRouteBuilder(
-            //     pageBuilder: (_, __, ___) => ProfilePage(),
-            //     transitionDuration: Duration(milliseconds: 300),
-            //     transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
-            //   ),
-            // );
+          if (index == 0) {
+            if (page != 'Все события'){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => MainPage(),
+                  transitionDuration: Duration(milliseconds: 300),
+                  transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                ),
+              );
+            }
+          }
+          if (index == 1) {
+            if (page != 'Мои прогнозы'){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => HistoryPage(),
+                  transitionDuration: Duration(milliseconds: 300),
+                  transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                ),
+              );
+            }
           }
         });
   }

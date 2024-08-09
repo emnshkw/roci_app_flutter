@@ -8,14 +8,14 @@ MaterialApp MyApp(){
   return MaterialApp(
     theme: ThemeData(
         fontFamily: 'Ubuntu',
-        primaryColor: Color(0xff0e59c9),
+        primaryColor: Color(0xffBAEE68),
         colorScheme: const ColorScheme.light(
-          primary: Color(0xff0e59c9),
+          primary: Color(0xffBAEE68),
         ),
         scrollbarTheme: ScrollbarThemeData(
             thumbVisibility: MaterialStateProperty.all(true),
             thickness: MaterialStateProperty.all(7),
-            thumbColor: MaterialStateProperty.all(const Color(0xff4e94bf)),
+            thumbColor: MaterialStateProperty.all(const Color(0xffBAEE68)),
             radius: const Radius.circular(10),
             minThumbLength: 100)
     ),
