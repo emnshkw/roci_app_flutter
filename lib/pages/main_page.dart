@@ -4,6 +4,7 @@ import 'package:roci_app/api.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
 import 'package:roci_app/bottom_menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:roci_app/header.dart';
 import 'package:roci_app/pages/cast_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -20,63 +21,6 @@ class _MainChooseState extends State<MainPage> {
     return MediaQuery.of(context).size.height / 852 * px;
   }
 
-  Widget header() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: convert_px_to_adapt_height(120),
-      color: Color(0xffBAEE68),
-      child: Column(
-        children: [
-          SizedBox(height: convert_px_to_adapt_height(50)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: convert_px_to_adapt_width(25)),
-                child: Text(
-                  "Все события",
-                  style: TextStyle(
-                      color: Color(0xff000000),
-                      fontWeight: FontWeight.bold,
-                      fontSize: convert_px_to_adapt_height(25)),
-                ),
-              ),
-              SizedBox(
-                height: convert_px_to_adapt_height(60),
-                width: convert_px_to_adapt_width(100),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        height: convert_px_to_adapt_height(50),
-                        width: convert_px_to_adapt_width(100),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    convert_px_to_adapt_width(20.5)),
-                                bottomLeft: Radius.circular(
-                                    convert_px_to_adapt_width(20.5)))),
-                        child: Image.asset('assets/photos/roci.png'),
-                      ),
-                    ),
-                    Positioned(
-                      child: Image.asset(
-                        'assets/photos/russia.png',
-                        scale: 0.9,
-                      ),
-                      left: 0,
-                      bottom: 0,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
 
   Widget sportTypeSwitcher() {
     double allSwitcherWidth =
@@ -170,12 +114,13 @@ class _MainChooseState extends State<MainPage> {
     );
   }
 
-  Widget contestButton(Map<String, dynamic> data) {
+  Widget contestButton(Map<String, dynamic> data,bool gotToken) {
+
     double btnWidth =
         MediaQuery.of(context).size.width - convert_px_to_adapt_width(50);
     return GestureDetector(
       onTap: () {
-        if (data['available']) {
+        if (data['available'] && gotToken) {
           Navigator.push(
             context,
             PageRouteBuilder(
@@ -185,15 +130,26 @@ class _MainChooseState extends State<MainPage> {
             ),
           );
         } else {
-          Fluttertoast.showToast(
-              msg: 'Данный конкурс доступен только нашим рефералам',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 15,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          Navigator.of(context).pop();
+          if (!gotToken){
+            Fluttertoast.showToast(
+                msg: 'Чтобы принять участие в конкурсе, выполните вход или зарегистрируйтесь!\nСделать это можно на странице "Профиль"',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 15,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+          else{
+            Fluttertoast.showToast(
+                msg: 'Данный конкурс доступен только нашим рефералам',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 15,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
         }
       },
       child: Container(
@@ -290,7 +246,7 @@ class _MainChooseState extends State<MainPage> {
                   contestBtns.add(Padding(
                     padding:
                         EdgeInsets.only(top: convert_px_to_adapt_height(12)),
-                    child: contestButton(contest),
+                    child: contestButton(contest,data['gotToken']),
                   ));
                 }
               }
@@ -323,10 +279,8 @@ class _MainChooseState extends State<MainPage> {
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _refresh,
@@ -335,7 +289,7 @@ class _MainChooseState extends State<MainPage> {
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              header(),
+              HeaderWidget(text: 'Все события'),
               Padding(
                   padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
               sportTypeSwitcher(),
@@ -349,3 +303,4 @@ class _MainChooseState extends State<MainPage> {
     );
   }
 }
+

@@ -19,7 +19,7 @@ Future<Response> try_to_get_registration_token(
 
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('https://placevisit.ru/api/v1/auth/user/get_token'),
+      Uri.parse('http://91.186.196.177/api/v1/auth/user/get_token'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ Future<Response> try_to_get_reset_token(String phone, String password) async {
   final jsonString = json.encode(body);
   final response = await post(
       Uri.parse(
-          'https://placevisit.ru/api/v1/auth/user/send_update_password_code'),
+          'http://91.186.196.177/api/v1/auth/user/send_update_password_code'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ Future<Response> get_token(String phone, String password) async {
 
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('https://placevisit.ru/auth/token/login'),
+      Uri.parse('http://91.186.196.177/auth/token/login'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -67,10 +67,10 @@ Future<void> delete_token() async {
   await storage.delete(key: 'auth_token');
 }
 
-// https://placevisit.ru/auth/token/logout/
+// http://91.186.196.177/auth/token/logout/
 Future<Response> logout() async {
   final token = await getToken();
-  var response = post(Uri.parse('https://placevisit.ru/auth/token/logout/'),
+  var response = post(Uri.parse('http://91.186.196.177/auth/token/logout/'),
       headers: {
         'Content-Type': 'text/html',
         'charset': 'UTF-8',
@@ -81,7 +81,7 @@ Future<Response> logout() async {
 }
 
 Future<Response> check_token(String token) async {
-  var response = await get(Uri.parse('https://placevisit.ru/api/v1/auth/user/'),
+  var response = await get(Uri.parse('http://91.186.196.177/api/v1/auth/user/'),
       headers: {
         'Content-Type': 'text/html',
         'charset': 'UTF-8',
@@ -101,7 +101,7 @@ Future<Response> try_to_register(Map<String, String> data) async {
   };
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('https://placevisit.ru/api/v1/auth/user/check_token'),
+      Uri.parse('http://91.186.196.177/api/v1/auth/user/check_token'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ Future<Response> try_to_reset_password(
   final jsonString = json.encode(body);
   final response = await post(
       Uri.parse(
-          'https://placevisit.ru/api/v1/auth/user/check_update_password_code'),
+          'http://91.186.196.177/api/v1/auth/user/check_update_password_code'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -144,10 +144,28 @@ Map<String, dynamic> convert_response_to_map(Response response) {
   return (data);
 }
 
+Future<Response> get_user_data() async {
+  final token = await getToken();
+  final response = await get(
+      Uri.parse('${urlStart}auth/user/'),
+      headers: {'Authorization': "Token $token"});
+  return response;
+}
+
+
 Future<dynamic> getContests () async {
   final token = await getToken();
-  final response = await get(Uri.parse('${urlStart}contests/'),headers: {'Authorization':'Token $token'});
-  return response;
+  if (token != '') {
+    final response = await get(Uri.parse('${urlStart}contests/'),
+        headers: {'Authorization': 'Token $token'});
+
+    return response;
+  }
+  else{
+    final response = await get(Uri.parse('${urlStart}contests/'));
+
+    return response;
+  }
 }
 
 
@@ -193,7 +211,7 @@ Future<Response> sendCast(String contestId,String cast) async {
 //     return convert_response_to_map(value)['city'].split(';')[1];
 //   });
 //   yield* Stream.periodic(Duration(seconds: 5), (_) {
-//     return get(Uri.parse('https://placevisit.ru/api/v1/$city'), headers: {
+//     return get(Uri.parse('http://91.186.196.177/api/v1/$city'), headers: {
 //       'Content-Type': 'text/html',
 //       'charset': 'UTF-8',
 //       'Authorization': "Token $token"
@@ -204,7 +222,7 @@ Future<Response> sendCast(String contestId,String cast) async {
 // Stream<Response> get_bars_as_stream() async* {
 //   final token = await getToken();
 //   yield* Stream.periodic(Duration(seconds: 5), (_) {
-//     return get(Uri.parse('https://placevisit.ru/api/v1/$city/bars'),
+//     return get(Uri.parse('http://91.186.196.177/api/v1/$city/bars'),
 //         headers: {
 //           'Content-Type': 'text/html',
 //           'charset': 'UTF-8',

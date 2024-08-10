@@ -4,6 +4,7 @@ import 'package:roci_app/api.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
 import 'package:roci_app/bottom_menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:roci_app/header.dart';
 import 'package:roci_app/pages/cast_page.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -19,64 +20,7 @@ class _HistoryPageState extends State<HistoryPage> {
   double convert_px_to_adapt_height(double px) {
     return MediaQuery.of(context).size.height / 852 * px;
   }
-
-  Widget header() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: convert_px_to_adapt_height(120),
-      color: Color(0xffBAEE68),
-      child: Column(
-        children: [
-          SizedBox(height: convert_px_to_adapt_height(50)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: convert_px_to_adapt_width(25)),
-                child: Text(
-                  "Мои прогнозы",
-                  style: TextStyle(
-                      color: Color(0xff000000),
-                      fontWeight: FontWeight.bold,
-                      fontSize: convert_px_to_adapt_height(25)),
-                ),
-              ),
-              SizedBox(
-                height: convert_px_to_adapt_height(60),
-                width: convert_px_to_adapt_width(100),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        height: convert_px_to_adapt_height(50),
-                        width: convert_px_to_adapt_width(100),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    convert_px_to_adapt_width(20.5)),
-                                bottomLeft: Radius.circular(
-                                    convert_px_to_adapt_width(20.5)))),
-                        child: Image.asset('assets/photos/roci.png'),
-                      ),
-                    ),
-                    Positioned(
-                      child: Image.asset(
-                        'assets/photos/russia.png',
-                        scale: 0.9,
-                      ),
-                      left: 0,
-                      bottom: 0,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  
 
   Widget castTypeSwitcher() {
     double allSwitcherWidth =
@@ -407,7 +351,7 @@ class _HistoryPageState extends State<HistoryPage> {
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              header(),
+              HeaderWidget(text: "Мои прогнозы"),
               Padding(
                   padding:
                       EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),

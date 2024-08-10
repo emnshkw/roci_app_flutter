@@ -29,10 +29,11 @@ class RociAppIcons {
   static const IconData support_icon = IconData(0xe806, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData info_icon = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData ref_icon = IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData history_icon = IconData(0xe809, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData ball_icon = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData hockey_icon = IconData(0xe80b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData open_icon = IconData(0xe80c, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData close_icon = IconData(0xe80d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData x = IconData(0xe80e, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData roci = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData history_icon = IconData(0xe812, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

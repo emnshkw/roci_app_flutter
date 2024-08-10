@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
 import 'package:roci_app/pages/history_page.dart';
 import 'package:roci_app/pages/main_page.dart';
+import 'package:roci_app/pages/profile_page.dart';
 
 class BottomMenuBar extends StatelessWidget {
   final int currentIndex;
@@ -49,6 +50,7 @@ class BottomMenuBar extends StatelessWidget {
         onTap: (int index) {
           if (index == 0) {
             if (page != 'Все события'){
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 PageRouteBuilder(
@@ -61,10 +63,24 @@ class BottomMenuBar extends StatelessWidget {
           }
           if (index == 1) {
             if (page != 'Мои прогнозы'){
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 PageRouteBuilder(
                   pageBuilder: (_, __, ___) => HistoryPage(),
+                  transitionDuration: Duration(milliseconds: 300),
+                  transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                ),
+              );
+            }
+          }
+          if (index == 2) {
+            if (page != 'Профиль'){
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => ProfilePage(),
                   transitionDuration: Duration(milliseconds: 300),
                   transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
                 ),
