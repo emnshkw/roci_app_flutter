@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roci_app/header.dart';
 import 'package:roci_app/pages/cast_page.dart';
 import 'package:roci_app/pages/main_page.dart';
+import 'package:roci_app/pages/otp_page.dart';
+import 'package:roci_app/pages/password_reset_page.dart';
 import 'package:roci_app/pages/profile_page.dart';
 import 'package:roci_app/pages/registration_page.dart';
 
@@ -190,72 +192,111 @@ class _LoginPageState extends State<LoginPage> {
           top: convert_px_to_adapt_height(30),
           left: convert_px_to_adapt_width(50),
           right: convert_px_to_adapt_width(50)),
-      child: Container(
-        width:
+      child: Column(
+        children: [
+          Container(
+            width:
             MediaQuery.of(context).size.width - convert_px_to_adapt_width(100),
-        height: convert_px_to_adapt_height(50),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xffBAEE68),
-              foregroundColor: Colors.black12),
-          onPressed: () {
-            if (phoneController.text.length != 12) {
-              Fluttertoast.showToast(
-                  msg: 'Номер телефона указан не полностью!',
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 15,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-              return ;
-            }
-            get_token(phoneController.text, passwordController.text)
-                .then((response) {
-              var data = convert_response_to_map(response);
-              try {
-                String token = data['auth_token'];
+            height: convert_px_to_adapt_height(50),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xffBAEE68),
+                  foregroundColor: Colors.black12),
+              onPressed: () {
+                if (phoneController.text.length != 12) {
+                  Fluttertoast.showToast(
+                      msg: 'Номер телефона указан не полностью!',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 15,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  return ;
+                }
+                get_token(phoneController.text, passwordController.text)
+                    .then((response) {
+                  var data = convert_response_to_map(response);
+                  try {
+                    String token = data['auth_token'];
+                    Fluttertoast.showToast(
+                        msg: 'Вход выполнен успешно!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 15,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    saveToken(token);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => MainPage(),
+                        transitionDuration: Duration(milliseconds: 300),
+                        transitionsBuilder: (_, a, __, c) =>
+                            FadeTransition(opacity: a, child: c),
+                      ),
+                    );
+                  } catch (e) {
+                    Fluttertoast.showToast(
+                        msg:
+                        'Проверьте правильность ввода номера телефона и/или пароля!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 15,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                });
+              },
+              child: Text(
+                "Войти",
+                style: TextStyle(
+                    color: Color(0xff000000),
+                    fontWeight: FontWeight.bold,
+                    fontSize: convert_px_to_adapt_height(16)),
+              ),
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(15))),
+          GestureDetector(
+            onTap: (){
+              if (phoneController.text.length != 12){
                 Fluttertoast.showToast(
-                    msg: 'Вход выполнен успешно!',
+                    msg: "Чтобы восстановить пароль, укажите номер телефона полностью!",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 15,
                     backgroundColor: Colors.green,
                     textColor: Colors.white,
                     fontSize: 16.0);
-                saveToken(token);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => MainPage(),
-                    transitionDuration: Duration(milliseconds: 300),
-                    transitionsBuilder: (_, a, __, c) =>
-                        FadeTransition(opacity: a, child: c),
-                  ),
-                );
-              } catch (e) {
-                Fluttertoast.showToast(
-                    msg:
-                        'Проверьте правильность ввода номера телефона и/или пароля!',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 15,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
               }
-            });
-          },
-          child: Text(
-            "Войти",
-            style: TextStyle(
-                color: Color(0xff000000),
-                fontWeight: FontWeight.bold,
-                fontSize: convert_px_to_adapt_height(16)),
-          ),
-        ),
+              try_to_get_reset_token(
+                  phoneController.text)
+                  .then((response) {
+                Map<String,dynamic> data = convert_response_to_map(response);
+                final body = {
+                  'phone':phoneController.text,
+                  'type':'Восстановление'
+                };
+                if (data['status'] == "Success"){
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => PasswordResetPage(body),
+                      transitionDuration: Duration(milliseconds: 300),
+                      transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                }
+              });
+            },
+            child: Text("Забыли пароль?",style: TextStyle(color: Color(0xffAAA8A8)),),
+          )
+        ],
       ),
     );
   }

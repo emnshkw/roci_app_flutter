@@ -7,16 +7,16 @@ import 'package:roci_app/api.dart';
 import 'package:roci_app/pages/main_page.dart';
 import 'package:roci_app/pages/profile_page.dart';
 
-class OtpPage extends StatefulWidget {
+class PasswordResetPage extends StatefulWidget {
   Map<String,String> data;
-  OtpPage(this.data);
+  PasswordResetPage(this.data);
   @override
-  State<OtpPage> createState() => _OtpPageState(data);
+  State<PasswordResetPage> createState() => _PasswordResetPageState(data);
 }
 
-class _OtpPageState extends State<OtpPage> {
+class _PasswordResetPageState extends State<PasswordResetPage> {
   late Map<String,String> data;
-  _OtpPageState(Map<String,String> data1){
+  _PasswordResetPageState(Map<String,String> data1){
     data = data1;
   }
   double convert_px_to_adapt_width(double px) {
@@ -81,12 +81,50 @@ class _OtpPageState extends State<OtpPage> {
       width: containerWidth,
       child: Column(
         children: [
-          Text('Введите 4 последние цифры с номера, который вам позвонил',textAlign: TextAlign.center,style: TextStyle(color: Color(0xff898989)),),
+          otpInput(containerWidth),
           Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(25))),
-          otpInput(containerWidth)
+          Text('Введите 4 последние цифры с номера, который вам позвонил',textAlign: TextAlign.center,style: TextStyle(color: Color(0xff898989)),),
         ],
       ),
     ),);
+  }
+
+  Widget passwordInput(
+      TextEditingController controller, double containerWidth) {
+    return Container(
+      width: containerWidth,
+      child: TextField(
+        controller: controller,
+        obscureText: hided,
+        decoration: InputDecoration(
+            fillColor: Color(0xffffffff),
+            hintText: "Введите новый пароль",
+            filled: true,
+            focusedBorder: OutlineInputBorder(
+                borderRadius:
+                BorderRadius.circular(convert_px_to_adapt_width(10)),
+                borderSide: BorderSide(color: Color(0xffBAEE68))),
+            enabledBorder: OutlineInputBorder(
+                borderRadius:
+                BorderRadius.circular(convert_px_to_adapt_width(10)),
+                borderSide: BorderSide(color: Color(0xffBAEE68))),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Color(0xffBEBEBE),
+            ),
+            suffixIcon: GestureDetector(
+              child: Icon(
+                Icons.remove_red_eye,
+                color: Color(0xffBEBEBE),
+              ),
+              onTap: () {
+                setState(() {
+                  hided = !hided;
+                });
+              },
+            )),
+      ),
+    );
   }
 
   Widget otpInput(double containerWidth){
@@ -100,17 +138,17 @@ class _OtpPageState extends State<OtpPage> {
           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
           LengthLimitingTextInputFormatter(4)],
         decoration: InputDecoration(
-            fillColor: Color(0xffffffff),
-            hintText: "Введите код",
-            filled: true,
-            focusedBorder: OutlineInputBorder(
-                borderRadius:
-                BorderRadius.circular(convert_px_to_adapt_width(10)),
-                borderSide: BorderSide(color: Color(0xffBAEE68))),
-            enabledBorder: OutlineInputBorder(
-                borderRadius:
-                BorderRadius.circular(convert_px_to_adapt_width(10)),
-                borderSide: BorderSide(color: Color(0xffBAEE68))),),
+          fillColor: Color(0xffffffff),
+          hintText: "Введите код",
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(convert_px_to_adapt_width(10)),
+              borderSide: BorderSide(color: Color(0xffBAEE68))),
+          enabledBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(convert_px_to_adapt_width(10)),
+              borderSide: BorderSide(color: Color(0xffBAEE68))),),
       ),
     );
   }
@@ -124,24 +162,25 @@ class _OtpPageState extends State<OtpPage> {
       height: convert_px_to_adapt_height(50),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xffBAEE68),
-          foregroundColor: Colors.black54
+            backgroundColor: Color(0xffBAEE68),
+            foregroundColor: Colors.black54
         ),
         onPressed: (){
           data['code'] = otpController.text;
-          if (data['type'] == 'Регистрация'){
-            try_to_register(data).then((response){
+          if (data['type'] == "Восстановление"){
+            data['password'] = passwordController.text;
+            try_to_reset_password(data['phone']!, passwordController.text, otpController.text).then((response){
               Map<String,dynamic> resp_data = convert_response_to_map(response);
-              if (resp_data['status'] == "Success"){
+              if (resp_data['status'] == 'Success'){
+                saveToken(resp_data['message']['auth_token']);
                 Fluttertoast.showToast(
-                    msg: 'Регистрация прошла успешно!',
+                    msg: 'Вы успешно сменили пароль!',
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 15,
                     backgroundColor: Colors.green,
                     textColor: Colors.white,
                     fontSize: 16.0);
-                saveToken(resp_data['message']);
                 Navigator.push(
                   context,
                   PageRouteBuilder(
@@ -151,20 +190,7 @@ class _OtpPageState extends State<OtpPage> {
                   ),
                 );
               }
-              else{
-                Fluttertoast.showToast(
-                    msg: resp_data['message'],
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 15,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
             });
-          }
-          if (data['type'] == "Восстановление пароля"){
-
           }
           ;
         },
@@ -175,13 +201,14 @@ class _OtpPageState extends State<OtpPage> {
 
 
   TextEditingController otpController = TextEditingController();
-  
+  TextEditingController passwordController = TextEditingController();
+  bool hided = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          children: [backButton(), enterText(),otpField(),acceptBtn()],
+          children: [backButton(), enterText(),Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(25))),passwordInput(passwordController, MediaQuery.of(context).size.width-convert_px_to_adapt_width(60)),otpField(),acceptBtn()],
         ),
       ),
       backgroundColor: const Color(0xffECECEC),

@@ -28,8 +28,8 @@ Future<Response> try_to_get_registration_token(
   return response;
 }
 
-Future<Response> try_to_get_reset_token(String phone, String password) async {
-  final body = {'password': password, "phone": phone};
+Future<Response> try_to_get_reset_token(String phone) async {
+  final body = {"phone": phone};
   final jsonString = json.encode(body);
   final response = await post(
       Uri.parse(
@@ -92,7 +92,7 @@ Future<Response> check_token(String token) async {
 
 Future<Response> try_to_register(Map<String, String> data) async {
   final body = {
-    'username': data['name'],
+    'username': data['username'],
     "phone": data['phone'],
     "password": data['password'],
     'code': data['code'],

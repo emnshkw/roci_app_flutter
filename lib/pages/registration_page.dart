@@ -233,7 +233,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
               'username': nameController.text,
               "phone": phoneController.text,
               "password":passwordController.text,
-              "re_password":passwordController.text
+              "re_password":passwordController.text,
+              'type':"Регистрация"
             };
             try_to_get_registration_token(
                     nameController.text, phoneController.text)

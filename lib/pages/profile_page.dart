@@ -212,9 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (snapshot.hasData) {
                     Map<String, dynamic> data =
                         convert_snapshot_to_map(snapshot);
-                    print(data);
                     try {
-                      // return Text(data['name']);
                       String name = data['name'];
                       return SizedBox();
                     }
