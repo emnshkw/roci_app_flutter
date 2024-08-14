@@ -132,6 +132,7 @@ class ChatPageState extends State<ChatPage> {
                       borderRadius:
                           BorderRadius.circular(convert_px_to_adapt_width(8))),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(message),
                       Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(15))),
