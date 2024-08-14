@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:roci_app/api.dart';
 import 'package:roci_app/assets/roci_app_icons.dart';
@@ -49,16 +52,15 @@ class ChatPageState extends State<ChatPage> {
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius:
-              BorderRadius.circular(convert_px_to_adapt_width(10))),
+                  BorderRadius.circular(convert_px_to_adapt_width(10))),
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius:
-              BorderRadius.circular(convert_px_to_adapt_width(10)))),
+                  BorderRadius.circular(convert_px_to_adapt_width(10)))),
     );
   }
 
-
-  Widget messageBar(){
+  Widget messageBar() {
     return Container(
       width: MediaQuery.of(context).size.width,
       // padding: EdgeInsets.only(
@@ -80,7 +82,9 @@ class ChatPageState extends State<ChatPage> {
                         convert_px_to_adapt_width(67),
                     child: messageInput(),
                   ),
-                  Padding(padding: EdgeInsets.only(right: convert_px_to_adapt_width(8))),
+                  Padding(
+                      padding:
+                          EdgeInsets.only(right: convert_px_to_adapt_width(8))),
                   GestureDetector(
                     onTap: () {
                       sendMessage(messageController.text);
@@ -101,27 +105,77 @@ class ChatPageState extends State<ChatPage> {
     );
   }
 
-
-  Widget message(String message,bool byUser){
-    return Align(
-      alignment: byUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Padding(
-        padding: byUser ? EdgeInsets.only(right: convert_px_to_adapt_width(18)) : EdgeInsets.only(left: convert_px_to_adapt_width(18)),
-        child: Container(
-          width: MediaQuery.of(context).size.width/1.7,
-          padding: EdgeInsets.all(convert_px_to_adapt_width(12)),
-          decoration: BoxDecoration(
-            color: byUser ? Color(0xffBAEE68) : Color(0xffAAAAAA),
-            borderRadius: BorderRadius.circular(convert_px_to_adapt_width(8))
+  Widget message(
+      String message, bool byUser, String dateText, String timeText) {
+    return Column(
+      children: [
+        dateText == ''
+            ? SizedBox()
+            : Padding(
+                padding:
+                    EdgeInsets.only(bottom: convert_px_to_adapt_height(15)),
+                child: Text(dateText),
+              ),
+        Align(
+          alignment: byUser ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: byUser
+                ? EdgeInsets.only(right: convert_px_to_adapt_width(18))
+                : EdgeInsets.only(left: convert_px_to_adapt_width(18)),
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.7,
+                  padding: EdgeInsets.all(convert_px_to_adapt_width(12)),
+                  decoration: BoxDecoration(
+                      color: byUser ? Color(0xffBAEE68) : Color(0xffAAAAAA),
+                      borderRadius:
+                          BorderRadius.circular(convert_px_to_adapt_width(8))),
+                  child: Column(
+                    children: [
+                      Text(message),
+                      Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(15))),
+                      Align(
+                        child: Text(timeText),
+                        alignment: Alignment.centerRight,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-          child: Text(message),
-        ),
-      ),
+        )
+      ],
     );
   }
 
+  List<String> monthRu = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентрября",
+    "октября",
+    "ноября",
+    "декабря"
+  ];
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300), curve: Curves.elasticOut);
+    } else {
+      Timer(Duration(milliseconds: 400), () => _scrollToBottom());
+    }
+  }
+  bool scrolledDown = false;
+  bool elsAdded = false;
   TextEditingController messageController = TextEditingController();
-
+  ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,21 +184,48 @@ class ChatPageState extends State<ChatPage> {
         children: [
           HeaderWidget(text: 'Связь с поддержкой'),
           Expanded(
-            // width: MediaQuery.of(context).size.width,
-            // color: Colors.red,
             child: StreamBuilder(
               stream: getMessageStream(),
-              builder: (BuildContext context,AsyncSnapshot snapshot){
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
                 List<Widget> messages = [];
-                if (snapshot.hasData){
-                  Map<String,dynamic> data = convert_snapshot_to_map(snapshot);
-                  for (Map<String,dynamic> messageData in data['message']){
-                    messages.add(message(messageData['message'], messageData['byClient']));
-                    messages.add(Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(12))));
+                List<String> dates = [];
+                if (snapshot.hasData) {
+                  Map<String, dynamic> data = convert_snapshot_to_map(snapshot);
+                  for (int i = 0; i < data['message'].length; i++) {
+                    Map<String, dynamic> messageData = data['message'][i];
+                    List<String> dateInfo =
+                        messageData['message_date'].split('T')[0].split('-');
+                    String dateText =
+                        '${dateInfo[2]} ${monthRu[int.parse(dateInfo[1]) - 1]} ${dateInfo[0]}';
+                    List<String> timeInfo =
+                        messageData['message_date'].split('T')[1].split(':');
+                    String timeText = '${timeInfo[0]}:${timeInfo[1]}';
+                    if (dates.contains(dateText)) {
+                      dateText = '';
+                    }
+                    else{
+                      dates.add(dateText);
+                    }
+                    messages.add(message(messageData['message'],
+                        messageData['byClient'], dateText, timeText));
+                    messages.add(Padding(
+                        padding: EdgeInsets.only(
+                            bottom: convert_px_to_adapt_height(12))));
+                  }
+
+                  if (elsAdded && !scrolledDown){
+                    _scrollToBottom();
+                    scrolledDown = true;
+                  }
+                  if (!elsAdded){
+                    elsAdded = true;
                   }
                 }
                 return ListView(
                   children: messages,
+                  dragStartBehavior: DragStartBehavior.down,
+
+                  controller: _scrollController,
                 );
               },
             ),
