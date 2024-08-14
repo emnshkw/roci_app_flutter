@@ -182,7 +182,7 @@ class ChatPageState extends State<ChatPage> {
       resizeToAvoidBottomInset: true,
       body: Column(
         children: [
-          HeaderWidget(text: 'Связь с поддержкой'),
+          HeaderWidget(text: 'Чат с оператором'),
           Expanded(
             child: StreamBuilder(
               stream: getMessageStream(),
