@@ -5,10 +5,13 @@ import 'package:roci_app/assets/roci_app_icons.dart';
 import 'package:roci_app/bottom_menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roci_app/header.dart';
+import 'package:roci_app/pages/archive_page.dart';
 import 'package:roci_app/pages/cast_page.dart';
+import 'package:roci_app/pages/chat_page.dart';
 import 'package:roci_app/pages/login_page.dart';
 import 'package:roci_app/pages/main_page.dart';
 import 'package:roci_app/pages/registration_page.dart';
+import 'package:roci_app/pages/support_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -146,26 +149,53 @@ class _ProfilePageState extends State<ProfilePage> {
             profileButton(Icon(RociAppIcons.history_icon), "История прогнозов",
                 containerWidth,(){}),
             Divider(color: Color(0xff949494)),
-            profileButton(Icon(Icons.currency_exchange), "История операций",
-                containerWidth,(){}),
-            Divider(color: Color(0xff949494)),
-            profileButton(Icon(RociAppIcons.ref_icon), "Реферальный клуб",
-                containerWidth,(){}),
+            profileButton(Icon(Icons.currency_exchange), "Архив конкурсов",
+                containerWidth,(){
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => ArchivePage(),
+                      transitionDuration: Duration(milliseconds: 300),
+                      transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                }),
+            // Divider(color: Color(0xff949494)),
+            // profileButton(Icon(RociAppIcons.ref_icon), "Реферальный клуб",
+            //     containerWidth,(){}),
             Divider(color: Color(0xff949494)),
             profileButton(Icon(RociAppIcons.profile_icon), "Личные данные",
                 containerWidth,(){}),
             Divider(color: Color(0xff949494)),
             profileButton(Icon(RociAppIcons.support_icon), "Служба поддержки",
-                containerWidth,(){}),
+                containerWidth,(){
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => SupportPage(),
+                      transitionDuration: Duration(milliseconds: 300),
+                      transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                }),
             Divider(color: Color(0xff949494)),
             profileButton(
                 Icon(RociAppIcons.info_icon), "Условия", containerWidth,(){}),
             Divider(color: Color(0xff949494)),
             profileButton(
-                Icon(RociAppIcons.docs_icon), "Документы", containerWidth,(){}),
-            Divider(color: Color(0xff949494)),
-            profileButton(
-                Icon(RociAppIcons.settings_icon), "Настройки", containerWidth,(){}),
+                Icon(Icons.chat), "Связь с оператором", containerWidth,(){
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => ChatPage(),
+                  transitionDuration: Duration(milliseconds: 300),
+                  transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                ),
+              );
+            }),
+            // Divider(color: Color(0xff949494)),
+            // profileButton(
+            //     Icon(RociAppIcons.settings_icon), "Настройки", containerWidth,(){}),
             Divider(color: Color(0xff949494)),
             profileButton(
                 Icon(Icons.exit_to_app), "Выйти из аккаунта", containerWidth,(){

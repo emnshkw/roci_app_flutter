@@ -20,7 +20,6 @@ class _HistoryPageState extends State<HistoryPage> {
   double convert_px_to_adapt_height(double px) {
     return MediaQuery.of(context).size.height / 852 * px;
   }
-  
 
   Widget castTypeSwitcher() {
     double allSwitcherWidth =
@@ -139,11 +138,11 @@ class _HistoryPageState extends State<HistoryPage> {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(convert_px_to_adapt_width(50)),
                         topRight:
-                        Radius.circular(convert_px_to_adapt_width(50)),
+                            Radius.circular(convert_px_to_adapt_width(50)),
                         bottomLeft:
-                        Radius.circular(convert_px_to_adapt_width(20)),
+                            Radius.circular(convert_px_to_adapt_width(20)),
                         bottomRight:
-                        Radius.circular(convert_px_to_adapt_width(20)))),
+                            Radius.circular(convert_px_to_adapt_width(20)))),
                 child: Column(
                   children: [
                     Container(
@@ -219,7 +218,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                     Padding(
                       padding:
-                      EdgeInsets.only(left: convert_px_to_adapt_width(10)),
+                          EdgeInsets.only(left: convert_px_to_adapt_width(10)),
                       child: Row(
                         children: lineSplitter,
                       ),
@@ -227,85 +226,107 @@ class _HistoryPageState extends State<HistoryPage> {
                     Padding(
                         padding: EdgeInsets.only(
                             bottom: convert_px_to_adapt_height(20))),
-                    data['isActive'] ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: convert_px_to_adapt_width(12)),
-                          child: Text("Прогнозируемый исход:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: convert_px_to_adapt_height(15)),),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: convert_px_to_adapt_width(10)),
-                          child: Container(
-                            width: convert_px_to_adapt_width(40),
-                            height: convert_px_to_adapt_height(40),
-                            decoration: BoxDecoration(
-                                color: Color(0xffD9D9D9),
-                                borderRadius: BorderRadius.circular(
-                                    convert_px_to_adapt_width(7))),
-                            child: Center(
-                              child: Text(castData['prognoz']),
-                            ),
+                    data['isActive']
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: convert_px_to_adapt_width(12)),
+                                child: Text(
+                                  "Прогнозируемый исход:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: convert_px_to_adapt_height(15)),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    right: convert_px_to_adapt_width(10)),
+                                child: Container(
+                                  width: convert_px_to_adapt_width(40),
+                                  height: convert_px_to_adapt_height(40),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffD9D9D9),
+                                      borderRadius: BorderRadius.circular(
+                                          convert_px_to_adapt_width(7))),
+                                  child: Center(
+                                    child: Text(castData['prognoz']),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: convert_px_to_adapt_width(12)),
+                                child: Text(
+                                  "Прогнозируемый исход:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: convert_px_to_adapt_height(10)),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    right: convert_px_to_adapt_width(10)),
+                                child: Container(
+                                  width: convert_px_to_adapt_width(30),
+                                  height: convert_px_to_adapt_height(30),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          castData['prognoz'] == data['result']
+                                              ? Color(0xffBAEE68)
+                                              : Color(0xffEE6868),
+                                      borderRadius: BorderRadius.circular(
+                                          convert_px_to_adapt_width(7))),
+                                  child: Center(
+                                    child: Text(castData['prognoz']),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: convert_px_to_adapt_width(12)),
+                                child: Text(
+                                  "Исход:",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: convert_px_to_adapt_height(10)),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    right: convert_px_to_adapt_width(10)),
+                                child: Container(
+                                  width: convert_px_to_adapt_width(30),
+                                  height: convert_px_to_adapt_height(30),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffD9D9D9),
+                                      borderRadius: BorderRadius.circular(
+                                          convert_px_to_adapt_width(7))),
+                                  child: Center(
+                                    child: Text(data['result']),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                        ),
-                      ],
-                    ) : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: convert_px_to_adapt_width(12)),
-                          child: Text("Прогнозируемый исход:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: convert_px_to_adapt_height(10)),),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: convert_px_to_adapt_width(10)),
-                          child: Container(
-                            width: convert_px_to_adapt_width(30),
-                            height: convert_px_to_adapt_height(30),
-                            decoration: BoxDecoration(
-                                color: castData['prognoz'] == data['result'] ? Color(0xffBAEE68) : Color(0xffEE6868),
-                                borderRadius: BorderRadius.circular(
-                                    convert_px_to_adapt_width(7))),
-                            child: Center(
-                              child: Text(castData['prognoz']),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: convert_px_to_adapt_width(12)),
-                          child: Text("Исход:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: convert_px_to_adapt_height(10)),),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: convert_px_to_adapt_width(10)),
-                          child: Container(
-                            width: convert_px_to_adapt_width(30),
-                            height: convert_px_to_adapt_height(30),
-                            decoration: BoxDecoration(
-                                color: Color(0xffD9D9D9),
-                                borderRadius: BorderRadius.circular(
-                                    convert_px_to_adapt_width(7))),
-                            child: Center(
-                              child: Text(data['result']),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(bottom: convert_px_to_adapt_height(20)))
+                    Padding(
+                        padding: EdgeInsets.only(
+                            bottom: convert_px_to_adapt_height(20)))
                   ],
                 ),
               ),
             );
 
-            if (choosedType == "Активные" && data['isActive']){
+            if (choosedType == "Активные" && data['isActive']) {
               return castBtn;
             }
-            if (choosedType == "Завершённые" && !data['isActive']){
+            if (choosedType == "Завершённые" && !data['isActive']) {
               return castBtn;
             }
             return Container();
@@ -320,6 +341,9 @@ class _HistoryPageState extends State<HistoryPage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             Map<String, dynamic> data = convert_snapshot_to_map(snapshot);
+            if (data['status'] != 'success'){
+              return SizedBox();
+            }
             List<Widget> contestBtns = [];
             for (Map<String, dynamic> cast in data['data']) {
               contestBtns.add(castButton(cast['contest_id'].toString(), cast));
@@ -343,32 +367,45 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        color: Color(0xffBAEE68),
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              HeaderWidget(text: "Мои прогнозы"),
-              Padding(
-                  padding:
-                      EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
-              castTypeSwitcher(),
-              Padding(
-                  padding:
-                      EdgeInsets.only(bottom: convert_px_to_adapt_height(16))),
-              casts()
-            ],
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        if (details.delta.dx > 5) {
+          setState(() {
+            choosedType = "Активные";
+          });
+        } else if (details.delta.dx < -5) {
+          setState(() {
+            choosedType = "Завершённые";
+          });
+        }
+      },
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: _refresh,
+          color: Color(0xffBAEE68),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                HeaderWidget(text: "Мои прогнозы"),
+                Padding(
+                    padding:
+                        EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
+                castTypeSwitcher(),
+                Padding(
+                    padding: EdgeInsets.only(
+                        bottom: convert_px_to_adapt_height(16))),
+                casts()
+              ],
+            ),
           ),
         ),
-      ),
-      backgroundColor: const Color(0xffECECEC),
-      bottomNavigationBar: BottomMenuBar(
-        currentIndex: 1,
-        context: context,
-        page: "Мои прогнозы",
+        backgroundColor: const Color(0xffECECEC),
+        bottomNavigationBar: BottomMenuBar(
+          currentIndex: 1,
+          context: context,
+          page: "Мои прогнозы",
+        ),
       ),
     );
   }

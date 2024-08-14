@@ -169,6 +169,12 @@ Future<dynamic> getContests () async {
 }
 
 
+Future<dynamic> getArchive () async {
+  final response = await get(Uri.parse('${urlStart}contests/?archieve=yes'));
+
+  return response;
+}
+
 Future<dynamic> getContest (String id) async {
   final token = await getToken();
   final response = await get(Uri.parse('${urlStart}contests/$id/'),headers: {'Authorization':'Token $token'});
@@ -204,6 +210,55 @@ Future<Response> sendCast(String contestId,String cast) async {
         'Authorization':"Token $token"
       });
   return response;
+}
+
+
+Future<Response> sendSupport(String theme,String text) async {
+  final body = {
+    'theme':theme,
+    'text':text
+  };
+  final token = await getToken();
+  final jsonString = json.encode(body);
+  final response = await post(
+      Uri.parse('${urlStart}support/'),
+      body: jsonString,
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        'Authorization':"Token $token"
+      });
+  return response;
+}
+
+
+Stream<Response> getMessageStream() async* {
+  final token = await getToken();
+  yield* Stream.periodic(const Duration(seconds: 1), (_) {
+    return get(Uri.parse('${urlStart}messages/'),
+        headers: {
+          'Content-Type': 'text/html',
+          'charset': 'UTF-8',
+          'Authorization': "Token $token"
+        });
+  }).asyncMap((event) async => await event);
+}
+
+
+Future<void> sendMessage(String text) async {
+  final body = {
+    'message':text
+  };
+  final token = await getToken();
+  final jsonString = json.encode(body);
+  final response = await post(
+      Uri.parse('${urlStart}messages/'),
+      body: jsonString,
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        'Authorization':"Token $token"
+      });
 }
 // Stream<Response> get_restaurants_as_stream() async* {
 //   final token = await getToken();

@@ -11,11 +11,15 @@ class HeaderWidget extends StatelessWidget {
   double convert_px_to_adapt_height(double px,BuildContext context) {
     return MediaQuery.of(context).size.height / 852 * px;
   }
+
+
+  
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: convert_px_to_adapt_height(120,context),
       color: Color(0xffBAEE68),
       child: Column(
         children: [
@@ -25,12 +29,15 @@ class HeaderWidget extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: convert_px_to_adapt_width(25,context)),
-                child: Text(
-                  text,
-                  style: TextStyle(
-                      color: Color(0xff000000),
-                      fontWeight: FontWeight.bold,
-                      fontSize: convert_px_to_adapt_height(25,context)),
+                child: Container(
+                  width: MediaQuery.of(context).size.width-convert_px_to_adapt_width(130, context),
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                        color: Color(0xff000000),
+                        fontWeight: FontWeight.bold,
+                        fontSize: convert_px_to_adapt_height(25,context)),
+                  ),
                 ),
               ),
               SizedBox(
@@ -64,7 +71,8 @@ class HeaderWidget extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
+          SizedBox(height: convert_px_to_adapt_height(30,context)),
         ],
       ),
     );

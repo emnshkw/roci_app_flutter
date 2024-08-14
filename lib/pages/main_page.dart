@@ -46,7 +46,7 @@ class _MainChooseState extends State<MainPage> {
               },
               child: Container(
                 alignment: Alignment.center,
-                width: allSwitcherWidth / 2 - 3.1,
+                width: allSwitcherWidth / 2 - convert_px_to_adapt_width(3.08),
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(convert_px_to_adapt_width(10)),
@@ -73,7 +73,7 @@ class _MainChooseState extends State<MainPage> {
                 });
               },
               child: Container(
-                width: allSwitcherWidth / 2 - 3,
+                width: allSwitcherWidth / 2 - convert_px_to_adapt_width(3.3),
                 height: convert_px_to_adapt_height(45),
                 decoration: BoxDecoration(
                   borderRadius:
@@ -281,25 +281,38 @@ class _MainChooseState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        color: Color(0xffBAEE68),
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              HeaderWidget(text: 'Все события'),
-              Padding(
-                  padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
-              sportTypeSwitcher(),
-              contests(),
-            ],
+    return GestureDetector(
+      onHorizontalDragUpdate: (details){
+        if (details.delta.dx > 5) {
+          setState(() {
+            choosedType = "Футбол";
+          });
+        } else if(details.delta.dx < -5){
+          setState(() {
+            choosedType = "Хоккей";
+          });
+        }
+      },
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: _refresh,
+          color: Color(0xffBAEE68),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                HeaderWidget(text: 'Все события'),
+                Padding(
+                    padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
+                sportTypeSwitcher(),
+                contests(),
+              ],
+            ),
           ),
         ),
+        backgroundColor: const Color(0xffECECEC),
+        bottomNavigationBar: BottomMenuBar(currentIndex: 0, context: context,page: "Все события",),
       ),
-      backgroundColor: const Color(0xffECECEC),
-      bottomNavigationBar: BottomMenuBar(currentIndex: 0, context: context,page: "Все события",),
     );
   }
 }
