@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roci_app/header.dart';
 import 'package:roci_app/pages/cast_page.dart';
 import 'package:roci_app/pages/main_page.dart';
-import 'package:zoomable_photo_gallery/zoomable_photo_gallery_widget.dart';
 import 'package:roci_app/pages/gallery_page.dart';
 
 class SupportPage extends StatefulWidget {

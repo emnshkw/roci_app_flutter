@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:roci_app/api.dart';
@@ -6,6 +7,7 @@ import 'package:roci_app/bottom_menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:roci_app/header.dart';
 import 'package:roci_app/pages/cast_page.dart';
+import 'package:roci_app/pages/chat_page.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -20,7 +22,6 @@ class _MainChooseState extends State<MainPage> {
   double convert_px_to_adapt_height(double px) {
     return MediaQuery.of(context).size.height / 852 * px;
   }
-
 
   Widget sportTypeSwitcher() {
     double allSwitcherWidth =
@@ -114,8 +115,7 @@ class _MainChooseState extends State<MainPage> {
     );
   }
 
-  Widget contestButton(Map<String, dynamic> data,bool gotToken) {
-
+  Widget contestButton(Map<String, dynamic> data, bool gotToken) {
     double btnWidth =
         MediaQuery.of(context).size.width - convert_px_to_adapt_width(50);
     return GestureDetector(
@@ -126,21 +126,22 @@ class _MainChooseState extends State<MainPage> {
             PageRouteBuilder(
               pageBuilder: (_, __, ___) => CastPage(data['id']),
               transitionDuration: Duration(milliseconds: 300),
-              transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+              transitionsBuilder: (_, a, __, c) =>
+                  FadeTransition(opacity: a, child: c),
             ),
           );
         } else {
-          if (!gotToken){
+          if (!gotToken) {
             Fluttertoast.showToast(
-                msg: 'Чтобы принять участие в конкурсе, выполните вход или зарегистрируйтесь!\nСделать это можно на странице "Профиль"',
+                msg:
+                    'Чтобы принять участие в конкурсе, выполните вход или зарегистрируйтесь!\nСделать это можно на странице "Профиль"',
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 15,
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 16.0);
-          }
-          else{
+          } else {
             Fluttertoast.showToast(
                 msg: 'Данный конкурс доступен только нашим рефералам',
                 toastLength: Toast.LENGTH_SHORT,
@@ -183,10 +184,10 @@ class _MainChooseState extends State<MainPage> {
                               right: convert_px_to_adapt_width(7)),
                         ),
                         Container(
-                          child: Text(data['first_team_name']),
                           width: btnWidth -
                               convert_px_to_adapt_width(105) -
                               convert_px_to_adapt_width(60),
+                          child: Text(data['first_team_name']),
                         )
                       ],
                     ),
@@ -200,10 +201,10 @@ class _MainChooseState extends State<MainPage> {
                               right: convert_px_to_adapt_width(7)),
                         ),
                         Container(
-                          child: Text(data['second_team_name']),
                           width: btnWidth -
                               convert_px_to_adapt_width(105) -
                               convert_px_to_adapt_width(60),
+                          child: Text(data['second_team_name']),
                         )
                       ],
                     ),
@@ -231,6 +232,36 @@ class _MainChooseState extends State<MainPage> {
     );
   }
 
+  Widget unlockBtn() {
+    return Padding(
+      padding: EdgeInsets.only(top: convert_px_to_adapt_height(15)),
+      child: Container(
+        width:
+            MediaQuery.of(context).size.width - convert_px_to_adapt_width(50),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ChatPage(),
+                transitionDuration: Duration(milliseconds: 300),
+                transitionsBuilder: (_, a, __, c) =>
+                    FadeTransition(opacity: a, child: c),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xffBAEE68),
+              foregroundColor: Color(0xff000000)),
+          child: Text(
+            "Разблокировать конкурсы",
+            style: TextStyle(color: Color(0xff000000)),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget contests() {
     return FutureBuilder(
         future: getContests(),
@@ -238,7 +269,14 @@ class _MainChooseState extends State<MainPage> {
           if (snapshot.hasData) {
             Map<String, dynamic> data = convert_snapshot_to_map(snapshot);
             List<Widget> contestBtns = [];
+            bool unlockAdded = false;
             for (Map<String, dynamic> contest in data['data']) {
+              if (contest['available'] == false &&
+                  !unlockAdded &&
+                  contest['sport_type'] == choosedType) {
+                contestBtns.insert(0, unlockBtn());
+                unlockAdded = true;
+              }
               if (contest['isActive'] == false) {
                 continue;
               } else {
@@ -246,7 +284,7 @@ class _MainChooseState extends State<MainPage> {
                   contestBtns.add(Padding(
                     padding:
                         EdgeInsets.only(top: convert_px_to_adapt_height(12)),
-                    child: contestButton(contest,data['gotToken']),
+                    child: contestButton(contest, data['gotToken']),
                   ));
                 }
               }
@@ -263,13 +301,10 @@ class _MainChooseState extends State<MainPage> {
                 ),
               );
             }
-          } else {
-
-          }
+          } else {}
           return LinearProgressIndicator();
         });
   }
-
 
   String choosedType = 'Футбол';
 
@@ -280,20 +315,79 @@ class _MainChooseState extends State<MainPage> {
   }
 
   @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed){
+      if (!isAllowed){
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+    super.initState();
+  }
+
+  triggerNotification(var data){
+    AwesomeNotifications().createNotification(content: NotificationContent(largeIcon:'resourse://@mipmap/ic_launcher',id: data['id'], channelKey: 'roci_channel',title:data['title'],body:data['text']));
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onHorizontalDragUpdate: (details){
+      onHorizontalDragUpdate: (details) {
         if (details.delta.dx > 5) {
           setState(() {
             choosedType = "Футбол";
           });
-        } else if(details.delta.dx < -5){
+        } else if (details.delta.dx < -5) {
           setState(() {
             choosedType = "Хоккей";
           });
         }
       },
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ChatPage(),
+                transitionDuration: Duration(milliseconds: 300),
+                transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+              ),
+            );
+          },
+          child: Stack(
+            children: [
+              Center(
+                child: Icon(
+                  Icons.chat,
+                  size: convert_px_to_adapt_height(35),
+                ),
+              ),
+              Positioned(
+                left: 0,
+                top: 0,
+                child: StreamBuilder(
+                  stream: getMessageCountStream(),
+                  builder: (BuildContext context,AsyncSnapshot snapshot){
+                    if (snapshot.hasData){
+                      Map <String,dynamic> data = convert_snapshot_to_map(snapshot);
+                      if (data['message'] != 0 && data['message']!=null){
+                        print(data['message']);
+                        return CircleAvatar(
+                          child: Text(data['message'].toString()),
+                          radius: convert_px_to_adapt_width(12),
+                          backgroundColor: Color(0xffff0000),
+                        );
+                      }
+                    }
+                    return Text('');
+
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
         body: RefreshIndicator(
           onRefresh: _refresh,
           color: Color(0xffBAEE68),
@@ -301,9 +395,19 @@ class _MainChooseState extends State<MainPage> {
             physics: AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
+                StreamBuilder(stream: getNotifications(), builder: (BuildContext context,AsyncSnapshot snapshot){
+                  if (snapshot.hasData){
+                    Map<String,dynamic> data = convert_snapshot_to_map(snapshot);
+                    for (Map<String, dynamic> notificationData in data['message']) {
+                      triggerNotification(notificationData);
+                    }
+                  }
+                  return SizedBox();
+                }),
                 HeaderWidget(text: 'Все события'),
                 Padding(
-                    padding: EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
+                    padding:
+                        EdgeInsets.only(bottom: convert_px_to_adapt_width(15))),
                 sportTypeSwitcher(),
                 contests(),
               ],
@@ -311,9 +415,12 @@ class _MainChooseState extends State<MainPage> {
           ),
         ),
         backgroundColor: const Color(0xffECECEC),
-        bottomNavigationBar: BottomMenuBar(currentIndex: 0, context: context,page: "Все события",),
+        bottomNavigationBar: BottomMenuBar(
+          currentIndex: 0,
+          context: context,
+          page: "Все события",
+        ),
       ),
     );
   }
 }
-

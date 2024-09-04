@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zoomable_photo_gallery/zoomable_photo_gallery_widget.dart';
+import 'package:roci_app/zoomable_gallery.dart';
 
 
 

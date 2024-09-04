@@ -244,6 +244,42 @@ Stream<Response> getMessageStream() async* {
   }).asyncMap((event) async => await event);
 }
 
+Stream<Response> getMessageCountStream() async* {
+  final token = await getToken();
+  yield* Stream.periodic(const Duration(seconds: 1), (_) {
+    return get(Uri.parse('${urlStart}dialogs/'),
+        headers: {
+          'Content-Type': 'text/html',
+          'charset': 'UTF-8',
+          'Authorization': "Token $token"
+        });
+  }).asyncMap((event) async => await event);
+}
+
+Stream<Response> getNotifications() async* {
+  final token = await getToken();
+  yield* Stream.periodic(const Duration(seconds: 5), (_) {
+    return get(Uri.parse('${urlStart}notifications/'),
+        headers: {
+          'Content-Type': 'text/html',
+          'charset': 'UTF-8',
+          'Authorization': "Token $token"
+        });
+  }).asyncMap((event) async => await event);
+}
+
+Future<Response> getNotificationsAsFuture() async {
+  final token = await getToken();
+  final response = await get(
+      Uri.parse('${urlStart}notifications/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        'Authorization':"Token $token"
+      });
+  return response;
+}
+
 
 Future<void> sendMessage(String text) async {
   final body = {

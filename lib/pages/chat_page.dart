@@ -221,12 +221,15 @@ class ChatPageState extends State<ChatPage> {
                   if (!elsAdded){
                     elsAdded = true;
                   }
-                }
-                return ListView(
-                  children: messages,
-                  dragStartBehavior: DragStartBehavior.down,
+                  return ListView(
+                    children: messages,
+                    dragStartBehavior: DragStartBehavior.down,
 
-                  controller: _scrollController,
+                    controller: _scrollController,
+                  );
+                }
+                return Center(
+                  child: LinearProgressIndicator(),
                 );
               },
             ),
