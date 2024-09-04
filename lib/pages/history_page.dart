@@ -31,7 +31,7 @@ class _HistoryPageState extends State<HistoryPage> {
       child: Container(
         width: allSwitcherWidth,
         height: convert_px_to_adapt_height(45),
-        padding: EdgeInsets.all(convert_px_to_adapt_width(3)),
+        padding: EdgeInsets.all(convert_px_to_adapt_width(2)),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(convert_px_to_adapt_width(10)),
             color: Color(0xffD9D9D9)),

@@ -398,9 +398,14 @@ class _MainChooseState extends State<MainPage> {
                 StreamBuilder(stream: getNotifications(), builder: (BuildContext context,AsyncSnapshot snapshot){
                   if (snapshot.hasData){
                     Map<String,dynamic> data = convert_snapshot_to_map(snapshot);
-                    for (Map<String, dynamic> notificationData in data['message']) {
-                      triggerNotification(notificationData);
+                    print(data);
+                    try {
+                      for (Map<String,
+                          dynamic> notificationData in data['message']) {
+                        triggerNotification(notificationData);
+                      }
                     }
+                    catch(e){}
                   }
                   return SizedBox();
                 }),

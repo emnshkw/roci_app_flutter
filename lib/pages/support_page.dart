@@ -100,6 +100,21 @@ class SupportPageState extends State<SupportPage> {
             }
             sendSupport(themeController.text, textController.text).then((response){
               Map<String,dynamic> data = convert_response_to_map(response);
+              print(data);
+              try{
+                String status =data['status'];
+              }
+              catch(e){
+                Fluttertoast.showToast(
+                    msg: "Чтобы отправить обращение, зарегистрируйтесь или войдите в аккаунт!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 15,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                print(321);
+              }
               if (data['status'] == 'success'){
                 Fluttertoast.showToast(
                     msg: data['message'],

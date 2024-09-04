@@ -238,20 +238,58 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         );
                       });
-                    } catch (e) {}
-                  }
-                  return profileButton(Icon(Icons.chat), "Связь с оператором",
-                      containerWidth, '', () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, __, ___) => ChatPage(),
-                        transitionDuration: Duration(milliseconds: 300),
-                        transitionsBuilder: (_, a, __, c) =>
-                            FadeTransition(opacity: a, child: c),
-                      ),
+                    } catch (e) {return GestureDetector(
+                      onTap: (){
+                        Fluttertoast.showToast(
+                            msg:
+                            'Чтобы связаться с оператором, необходимо зарегистрироваться или войти в аккаунт',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 15,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      },
+                      child: profileButton(Icon(Icons.chat), "Связь с оператором",
+                          containerWidth, '', () {
+                            Fluttertoast.showToast(
+                                msg:
+                                'Чтобы связаться с оператором, необходимо зарегистрироваться или войти в аккаунт',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 15,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          }),
                     );
-                  });
+                    }
+                  }
+                  return GestureDetector(
+                    onTap: (){
+                      Fluttertoast.showToast(
+                          msg:
+                          'Чтобы связаться с оператором, необходимо зарегистрироваться или войти в аккаунт',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 15,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                    },
+                    child: profileButton(Icon(Icons.chat), "Связь с оператором",
+                        containerWidth, '', () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => ChatPage(),
+                          transitionDuration: Duration(milliseconds: 300),
+                          transitionsBuilder: (_, a, __, c) =>
+                              FadeTransition(opacity: a, child: c),
+                        ),
+                      );
+                    }),
+                  );
                 }),
             // Divider(color: Color(0xff949494)),
             // profileButton(
