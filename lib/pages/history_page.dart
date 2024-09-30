@@ -356,7 +356,7 @@ class _HistoryPageState extends State<HistoryPage> {
               return Padding(
                 padding: EdgeInsets.only(top: convert_px_to_adapt_height(100)),
                 child: Center(
-                  child: Text("На данный вид спорта не найдены конкурсы"),
+                  child: Text("Прогнозы не найдены"),
                 ),
               );
             }

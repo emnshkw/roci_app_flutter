@@ -9,6 +9,8 @@ import 'package:roci_app/pages/archive_page.dart';
 import 'package:roci_app/pages/cast_page.dart';
 import 'package:roci_app/pages/chat_page.dart';
 import 'package:roci_app/pages/conditions_page.dart';
+import 'package:roci_app/pages/conf_page.dart';
+import 'package:roci_app/pages/group_list_page.dart';
 import 'package:roci_app/pages/history_page.dart';
 import 'package:roci_app/pages/login_page.dart';
 import 'package:roci_app/pages/main_page.dart';
@@ -185,6 +187,20 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               );
             }),
+
+            profileButton(Icon(Icons.groups), "Каналы",
+                containerWidth, '', () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => GroupListPage(),
+                      transitionDuration: Duration(milliseconds: 300),
+                      transitionsBuilder: (_, a, __, c) =>
+                          FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                }),
+            Divider(color: Color(0xff949494)),
             // Divider(color: Color(0xff949494)),
             // profileButton(Icon(RociAppIcons.ref_icon), "Реферальный клуб",
             //     containerWidth,'',(){}),
@@ -208,6 +224,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     context,
                     PageRouteBuilder(
                       pageBuilder: (_, __, ___) => ConditionsPage(),
+                      transitionDuration: Duration(milliseconds: 300),
+                      transitionsBuilder: (_, a, __, c) =>
+                          FadeTransition(opacity: a, child: c),
+                    ),
+                  );
+                }),
+            Divider(color: Color(0xff949494)),
+            profileButton(Icon(Icons.security), "Политика конфиденциальности",
+                containerWidth, '', () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, __, ___) => ConfPage(),
                       transitionDuration: Duration(milliseconds: 300),
                       transitionsBuilder: (_, a, __, c) =>
                           FadeTransition(opacity: a, child: c),

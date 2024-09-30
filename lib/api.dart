@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 
-final String urlStart = 'http://91.186.196.177/api/v1/';
+final String urlStart = 'https://rociscore.ru/api/v1/';
 
 Future<String> getToken() async {
   final token = await storage.read(key: 'auth_token');
@@ -19,7 +19,7 @@ Future<Response> try_to_get_registration_token(
 
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('http://91.186.196.177/api/v1/auth/user/get_token'),
+      Uri.parse('https://rociscore.ru/api/v1/auth/user/get_token'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ Future<Response> try_to_get_reset_token(String phone) async {
   final jsonString = json.encode(body);
   final response = await post(
       Uri.parse(
-          'http://91.186.196.177/api/v1/auth/user/send_update_password_code'),
+          'https://rociscore.ru/api/v1/auth/user/send_update_password_code'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ Future<Response> get_token(String phone, String password) async {
 
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('http://91.186.196.177/auth/token/login'),
+      Uri.parse('https://rociscore.ru/auth/token/login'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -67,10 +67,10 @@ Future<void> delete_token() async {
   await storage.delete(key: 'auth_token');
 }
 
-// http://91.186.196.177/auth/token/logout/
+// https://rociscore.ru/auth/token/logout/
 Future<Response> logout() async {
   final token = await getToken();
-  var response = post(Uri.parse('http://91.186.196.177/auth/token/logout/'),
+  var response = post(Uri.parse('https://rociscore.ru/auth/token/logout/'),
       headers: {
         'Content-Type': 'text/html',
         'charset': 'UTF-8',
@@ -81,7 +81,7 @@ Future<Response> logout() async {
 }
 
 Future<Response> check_token(String token) async {
-  var response = await get(Uri.parse('http://91.186.196.177/api/v1/auth/user/'),
+  var response = await get(Uri.parse('https://rociscore.ru/api/v1/auth/user/'),
       headers: {
         'Content-Type': 'text/html',
         'charset': 'UTF-8',
@@ -101,7 +101,7 @@ Future<Response> try_to_register(Map<String, String> data) async {
   };
   final jsonString = json.encode(body);
   final response = await post(
-      Uri.parse('http://91.186.196.177/api/v1/auth/user/check_token'),
+      Uri.parse('https://rociscore.ru/api/v1/auth/user/check_token'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ Future<Response> try_to_reset_password(
   final jsonString = json.encode(body);
   final response = await post(
       Uri.parse(
-          'http://91.186.196.177/api/v1/auth/user/check_update_password_code'),
+          'https://rociscore.ru/api/v1/auth/user/check_update_password_code'),
       body: jsonString,
       headers: {
         'Content-Type': 'application/json',
@@ -302,7 +302,7 @@ Future<void> sendMessage(String text) async {
 //     return convert_response_to_map(value)['city'].split(';')[1];
 //   });
 //   yield* Stream.periodic(Duration(seconds: 5), (_) {
-//     return get(Uri.parse('http://91.186.196.177/api/v1/$city'), headers: {
+//     return get(Uri.parse('https://rociscore.ru/api/v1/$city'), headers: {
 //       'Content-Type': 'text/html',
 //       'charset': 'UTF-8',
 //       'Authorization': "Token $token"
@@ -313,7 +313,7 @@ Future<void> sendMessage(String text) async {
 // Stream<Response> get_bars_as_stream() async* {
 //   final token = await getToken();
 //   yield* Stream.periodic(Duration(seconds: 5), (_) {
-//     return get(Uri.parse('http://91.186.196.177/api/v1/$city/bars'),
+//     return get(Uri.parse('https://rociscore.ru/api/v1/$city/bars'),
 //         headers: {
 //           'Content-Type': 'text/html',
 //           'charset': 'UTF-8',

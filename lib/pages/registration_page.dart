@@ -12,6 +12,7 @@ import 'package:roci_app/pages/cast_page.dart';
 import 'package:roci_app/pages/main_page.dart';
 import 'package:roci_app/pages/otp_page.dart';
 import 'package:roci_app/pages/profile_page.dart';
+import 'package:roci_app/pages/user_agree_page.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -229,30 +230,49 @@ class _RegistrationPageState extends State<RegistrationPage> {
               backgroundColor: Color(0xffBAEE68),
               foregroundColor: Colors.black12),
           onPressed: () {
-            Map <String,String> body = {
+            if (!userAgreeAccepted) {
+              Fluttertoast.showToast(
+                  msg: 'Ознакомьтесь с пользовательским соглашением!',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 15,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+            Map<String, String> body = {
               'username': nameController.text,
               "phone": phoneController.text,
-              "password":passwordController.text,
-              "re_password":passwordController.text,
-              'type':"Регистрация"
+              "password": passwordController.text,
+              "re_password": passwordController.text,
+              'type': "Регистрация"
             };
             try_to_get_registration_token(
                     nameController.text, phoneController.text)
                 .then((response) {
-              Map<String,dynamic> data = convert_response_to_map(response);
-              if (data['status'] == "Success"){
+              Map<String, dynamic> data = convert_response_to_map(response);
+              if (data['status'] == "Success") {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (_, __, ___) => OtpPage(body),
                     transitionDuration: Duration(milliseconds: 300),
-                    transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                    transitionsBuilder: (_, a, __, c) =>
+                        FadeTransition(opacity: a, child: c),
                   ),
                 );
               }
+              else{
+                Fluttertoast.showToast(
+                    msg: data['message'],
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 15,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
             });
-
-
           },
           child: Text(
             "Зарегистрироваться",
@@ -266,17 +286,69 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+  Widget userAgree() {
+    return Padding(
+      padding: EdgeInsets.all(convert_px_to_adapt_width(25)),
+      child: Container(
+        width:
+            MediaQuery.of(context).size.width - convert_px_to_adapt_width(50),
+        child: Row(
+          children: [
+            Checkbox(
+                value: userAgreeAccepted,
+                onChanged: (bool? newValue) {
+                  setState(() {
+                    userAgreeAccepted = newValue!;
+                  });
+                }),
+            // Expanded(child: Text("Ознакомлен с ",)),
+            // Expanded(child: Text('пользовательским соглашением'))
+            Expanded(
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, __, ___) => UserAgree(),
+                        transitionDuration: Duration(milliseconds: 300),
+                        transitionsBuilder: (_, a, __, c) => FadeTransition(opacity: a, child: c),
+                      ),
+                    );
+                  },
+                  child: RichText(
+                      text: TextSpan(children: [
+                        TextSpan(
+                            text: "Ознакомлен с ", style: TextStyle(color: Colors.black)),
+                        TextSpan(
+                            text: 'пользовательским соглашением',
+                            style: TextStyle(color: Colors.blue))
+                      ])),
+                ))
+          ],
+        ),
+      ),
+    );
+  }
+
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool hided = true;
+  bool userAgreeAccepted = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
-          children: [backButton(), enterText(), inputs(), enterBtn()],
+          children: [
+            backButton(),
+            enterText(),
+            inputs(),
+            userAgree(),
+            enterBtn()
+          ],
         ),
       ),
       backgroundColor: const Color(0xffECECEC),
